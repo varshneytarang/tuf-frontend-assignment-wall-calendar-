@@ -76,6 +76,37 @@
   animation: particleDrift linear infinite;
 }
 
+.aurora-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(52px);
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.aurora-orb-top {
+  top: -10%;
+  left: -8%;
+  width: 420px;
+  height: 420px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.5), transparent 60%),
+    radial-gradient(circle at 80% 40%, rgba(59, 130, 246, 0.4), transparent 65%);
+  animation: auroraFloat 22s ease-in-out infinite alternate;
+}
+
+.aurora-orb-bottom {
+  bottom: -18%;
+  right: -6%;
+  width: 520px;
+  height: 520px;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(52, 211, 153, 0.5), transparent 60%),
+    radial-gradient(circle at 80% 70%, rgba(251, 191, 36, 0.35), transparent 65%);
+  animation: auroraFloatReverse 26s ease-in-out infinite alternate;
+}
+
 @keyframes pulseRing {
   0% {
     box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.45);
@@ -114,6 +145,30 @@
   }
   to {
     transform: translate3d(-18px, 120%, 0) rotate(280deg);
+  }
+}
+
+@keyframes auroraFloat {
+  0% {
+    transform: translate3d(-6%, 2%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4%, -2%, 0) scale(1.08);
+  }
+  100% {
+    transform: translate3d(10%, 4%, 0) scale(1.02);
+  }
+}
+
+@keyframes auroraFloatReverse {
+  0% {
+    transform: translate3d(6%, -4%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-4%, 2%, 0) scale(1.06);
+  }
+  100% {
+    transform: translate3d(-10%, -2%, 0) scale(1.02);
   }
 }
 

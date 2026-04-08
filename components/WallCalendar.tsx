@@ -13,7 +13,8 @@ import {
   isRangeEnd,
   isRangeStart,
   type CalendarRange,
-} from "@/lib/calendar";
+  type CalendarCell,
+} from "../lib/calendar";
 
 type PersistedState = {
   monthKey: string;
@@ -110,7 +111,7 @@ export function WallCalendar() {
   }
 
   function handleDaySelect(iso: string) {
-    setRange((current) => {
+    setRange((current: CalendarRange) => {
       if (!current.start || (current.start && current.end)) {
         return { start: iso, end: null };
       }
@@ -293,9 +294,9 @@ export function WallCalendar() {
               </div>
 
               <div className="calendar-grid" role="grid" aria-label={`${formatMonthTitle(viewMonth)} calendar`}>
-                {grid.map((week, weekIndex) => (
+                {grid.map((week: CalendarCell[], weekIndex: number) => (
                   <div className="calendar-week" key={`${monthKey}-${weekIndex}`} role="row">
-                    {week.map((cell, dayIndex) => {
+                    {week.map((cell: CalendarCell, dayIndex: number) => {
                       const inRange = isDateInRange(cell.iso, range);
                       const start = isRangeStart(cell.iso, range);
                       const end = isRangeEnd(cell.iso, range);

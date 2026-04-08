@@ -1,5 +1,10 @@
+import { CalendarProvider } from "./context/CalendarContext";
 import { WallCalendarTailwind } from "./components/WallCalendarTailwind";
 
 export default function App() {
-  return <WallCalendarTailwind />;
+  return (
+    <CalendarProvider>
+      <WallCalendarTailwind />
+    </CalendarProvider>
+  );
 }
