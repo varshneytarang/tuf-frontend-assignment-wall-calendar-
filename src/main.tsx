@@ -1,22 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import { ReactLenis } from "@studio-freight/react-lenis";
+import Lenis from "lenis";
 import App from "./App";
 import "./index.css";
 
-ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <ReactLenis
-      root
-      options={{
-        lerp: 0.08,
-        duration: 0.8,
-        smooth: true,
-        smoothTouch: true,
-        infinite: false,
-      }}
-    >
+function Root() {
+  useEffect(() => {
+    const lenis = new Lenis({
+      lerp: 0.08,
+      duration: 0.8,
+      smooth: true,
+      smoothTouch: true,
+      infinite: false,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      // Lenis has no explicit destroy in older versions, but we can
+      // stop the loop by using a flag if needed; for now just rely on
+      // page unload since this is a single-page app root.
+    };
+  }, []);
+
+  return (
+    <React.StrictMode>
       <App />
-    </ReactLenis>
-  </React.StrictMode>,
-);
+    </React.StrictMode>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(<Root />);
