@@ -1,0 +1,129 @@
+.font-serif {
+  font-family: "Cormorant Garamond", serif;
+}
+
+.paper-texture {
+  background-image:
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.7), transparent 32%),
+    radial-gradient(circle at 85% 0%, rgba(56, 189, 248, 0.15), transparent 30%),
+    repeating-linear-gradient(0deg, rgba(24, 33, 37, 0.015), rgba(24, 33, 37, 0.015) 1px, transparent 1px, transparent 4px);
+}
+
+.wall-accent-wedges {
+  background:
+    linear-gradient(152deg, transparent 0 31%, rgba(45, 212, 191, 0.9) 31% 43%, transparent 43% 100%),
+    linear-gradient(-152deg, transparent 0 60%, rgba(56, 189, 248, 0.88) 60% 74%, transparent 74% 100%);
+}
+
+.calendar-day {
+  transform-style: preserve-3d;
+}
+
+.calendar-day:hover {
+  transform: perspective(900px) rotateX(4deg) rotateY(-3deg) scale(1.01);
+}
+
+.calendar-day::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.35), rgba(255, 255, 255, 0.12));
+  clip-path: polygon(100% 0, 0 100%, 100% 100%);
+}
+
+.pulse-dot {
+  animation: pulseRing 1.9s infinite;
+}
+
+.particle {
+  position: absolute;
+  top: -8%;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.35));
+}
+
+.particle-snow {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  animation: particleFall linear infinite;
+}
+
+.particle-petal {
+  border-radius: 100% 0 100% 0;
+  background: rgba(255, 192, 203, 0.9);
+  animation: particleDrift linear infinite;
+}
+
+.particle-leaf {
+  border-radius: 60% 40% 60% 40%;
+  background: rgba(251, 146, 60, 0.9);
+  animation: particleDrift linear infinite;
+}
+
+.particle-rain {
+  width: 2px !important;
+  border-radius: 999px;
+  background: rgba(148, 211, 252, 0.9);
+  animation: particleRain linear infinite;
+}
+
+.particle-spark {
+  border-radius: 999px;
+  background: rgba(250, 204, 21, 0.95);
+  animation: particleDrift linear infinite;
+}
+
+@keyframes pulseRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(251, 146, 60, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(251, 146, 60, 0);
+  }
+}
+
+@keyframes particleFall {
+  from {
+    transform: translate3d(0, -10%, 0);
+  }
+  to {
+    transform: translate3d(-12px, 120%, 0);
+  }
+}
+
+@keyframes particleRain {
+  from {
+    transform: translate3d(0, -10%, 0);
+    opacity: 0.9;
+  }
+  to {
+    transform: translate3d(-4px, 120%, 0);
+    opacity: 0.1;
+  }
+}
+
+@keyframes particleDrift {
+  from {
+    transform: translate3d(0, -10%, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(-18px, 120%, 0) rotate(280deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

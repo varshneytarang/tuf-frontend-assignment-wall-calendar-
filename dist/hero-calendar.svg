@@ -1,0 +1,52 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b6c2d6" />
+      <stop offset="58%" stop-color="#d3dbe6" />
+      <stop offset="100%" stop-color="#eff3f6" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2c98cc" />
+      <stop offset="100%" stop-color="#1f6f9f" />
+    </linearGradient>
+    <linearGradient id="rock" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7b8794" />
+      <stop offset="100%" stop-color="#505962" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="26" stdDeviation="32" flood-color="#2b3237" flood-opacity="0.28" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#sky)" />
+
+  <g opacity="0.18">
+    <circle cx="920" cy="118" r="68" fill="#ffffff" />
+    <circle cx="920" cy="118" r="140" fill="#ffffff" fill-opacity="0.35" />
+  </g>
+
+  <path d="M0 570L220 460L360 510L560 390L780 470L960 360L1200 510V800H0V570Z" fill="#66737e" opacity="0.25" />
+  <path d="M0 612L240 500L420 560L640 420L820 520L1040 396L1200 485V800H0V612Z" fill="#4f5b66" opacity="0.46" />
+  <path d="M0 690L230 590L420 646L620 530L805 618L980 520L1200 600V800H0V690Z" fill="url(#rock)" />
+  <path d="M0 800V635L215 536L353 568L563 444L757 530L952 420L1200 548V800H0Z" fill="#2f3740" />
+
+  <g filter="url(#shadow)">
+    <path d="M486 498L689 354L762 382L566 538L486 498Z" fill="#1e262d" />
+    <path d="M589 462L689 354L734 372L632 492L589 462Z" fill="#eef3f6" opacity="0.32" />
+    <path d="M557 521L690 355L712 364L586 537L557 521Z" fill="#cbd3dc" opacity="0.24" />
+    <circle cx="682" cy="360" r="12" fill="#f06d3d" />
+  </g>
+
+  <g>
+    <path d="M780 434C736 389 692 373 651 374L595 433C643 430 684 443 723 473L780 434Z" fill="#1f6f9f" />
+    <path d="M648 377L687 346L715 366L676 394L648 377Z" fill="#f3f5f7" />
+    <path d="M709 370L732 321L744 325L724 377L709 370Z" fill="#20262c" />
+    <path d="M710 368L739 384" stroke="#20262c" stroke-width="7" stroke-linecap="round" />
+    <path d="M726 377L759 375" stroke="#20262c" stroke-width="7" stroke-linecap="round" />
+    <path d="M653 376L631 416" stroke="#20262c" stroke-width="7" stroke-linecap="round" />
+    <path d="M649 378L618 363" stroke="#20262c" stroke-width="7" stroke-linecap="round" />
+    <path d="M701 392L693 434" stroke="#20262c" stroke-width="7" stroke-linecap="round" />
+  </g>
+
+  <rect x="0" y="0" width="1200" height="800" fill="url(#sky)" fill-opacity="0.04" />
+</svg>
