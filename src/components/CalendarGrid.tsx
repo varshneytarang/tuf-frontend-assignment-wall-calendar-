@@ -13,6 +13,7 @@ export function CalendarGrid({ invalidPulse }: CalendarGridProps) {
     grid,
     weekNumbers,
     viewMode,
+    setViewMode,
     monthMemoKey,
     direction,
     effectiveRange,
@@ -27,6 +28,7 @@ export function CalendarGrid({ invalidPulse }: CalendarGridProps) {
     reminders,
     todayIso,
     selectedDayIso,
+    setSelectedDayIso,
   } = useCalendar();
 
   const [tooltipIso, setTooltipIso] = useState<string | null>(null);
@@ -129,6 +131,7 @@ export function CalendarGrid({ invalidPulse }: CalendarGridProps) {
                     (note) => note.id === editingNoteId && note.start === cell.iso,
                   );
                   const noteCount = taggedNotes.length;
+                  const hiddenCount = Math.max(0, noteCount - 2);
                   const mood = dayMoods[cell.iso];
 
                   let energyClass = "";
@@ -160,6 +163,8 @@ export function CalendarGrid({ invalidPulse }: CalendarGridProps) {
                     setTooltipIso((current) => (current === cell.iso ? null : current));
                   };
 
+                  const isToday = cell.isToday;
+
                   return (
                     <button
                       key={cell.iso}
@@ -170,7 +175,13 @@ export function CalendarGrid({ invalidPulse }: CalendarGridProps) {
                         "calendar-day group min-h-14 rounded-2xl border p-1.5 text-left shadow-sm transition md:min-h-[96px] md:p-2.5",
                         "focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-500",
                         cell.inMonth ? "opacity-100" : "opacity-45",
-                        theme === "dark" ? "border-slate-700/65 bg-slate-900/80" : "border-slate-200/85 bg-white/90",
+                        theme === "dark"
+                          ? isToday
+                            ? "border-orange-400 bg-slate-900/90"
+                            : "border-slate-700/65 bg-slate-900/80"
+                          : isToday
+                            ? "border-orange-400 bg-orange-50"
+                            : "border-slate-200/85 bg-white/90",
                         isWeekend ? "ring-1 ring-sky-400/20" : "",
                         viewMode === "week" ? "md:min-h-[120px]" : "",
                         viewMode === "day" ? "min-h-24 md:min-h-[150px]" : "",
@@ -187,25 +198,33 @@ export function CalendarGrid({ invalidPulse }: CalendarGridProps) {
                       onMouseLeave={handleMouseLeave}
                     >
                       <div className="flex items-center justify-between">
-                        <span
-                          className={[
-                            "text-sm font-bold md:text-base",
-                            theme === "dark" ? "text-slate-100" : "text-slate-800",
-                          ].join(" ")}
-                        >
-                          {cell.date.getDate()}
-                        </span>
+                        <div className="flex flex-col items-start">
+                          <span
+                            className={[
+                              "text-sm font-bold md:text-base",
+                              isToday
+                                ? "rounded-full bg-orange-500 px-2 py-0.5 text-white shadow-sm"
+                                : theme === "dark"
+                                  ? "text-slate-100"
+                                  : "text-slate-800",
+                            ].join(" ")}
+                          >
+                            {cell.date.getDate()}
+                          </span>
+                          {isToday ? (
+                            <span className="mt-0.5 rounded-full bg-orange-500/10 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.16em] text-orange-600 dark:text-orange-300">
+                              Today
+                            </span>
+                          ) : null}
+                        </div>
                         <div className="flex items-center gap-1">
                           {mood === "low" ? <span className="h-2 w-2 rounded-full bg-rose-400" /> : null}
                           {mood === "ok" ? <span className="h-2 w-2 rounded-full bg-amber-400" /> : null}
                           {mood === "high" ? <span className="h-2 w-2 rounded-full bg-emerald-400" /> : null}
-                          {cell.isToday ? (
-                            <span className="h-2 w-2 rounded-full bg-orange-500 ring-4 ring-orange-400/45 pulse-dot" />
-                          ) : null}
                         </div>
                       </div>
 
-                      <div className="mt-1 flex flex-wrap gap-1">
+                      <div className="mt-1 flex flex-wrap items-center gap-1">
                         {(viewMode === "day" ? taggedNotes : taggedNotes.slice(0, 2)).map((note) => (
                           <span
                             key={note.id}
@@ -225,6 +244,20 @@ export function CalendarGrid({ invalidPulse }: CalendarGridProps) {
                             {note.text}
                           </span>
                         ))}
+
+                        {viewMode !== "day" && noteCount > 1 ? (
+                          <button
+                            type="button"
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              setSelectedDayIso(cell.iso);
+                              setViewMode("day");
+                            }}
+                            className="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-semibold text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+                          >
+                            {hiddenCount > 0 ? `+${hiddenCount} more` : "More"}
+                          </button>
+                        ) : null}
                       </div>
 
                       {viewMode === "week" ? (

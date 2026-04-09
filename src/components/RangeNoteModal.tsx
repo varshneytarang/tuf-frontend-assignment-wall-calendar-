@@ -13,6 +13,7 @@ export function RangeNoteModal() {
     setRangeNoteEditorOpen,
     attachDraftToRange,
     rangeEditorNoteId,
+    deleteRangeNote,
   } = useCalendar();
 
   const [memoInput, setMemoInput] = useState("");
@@ -87,9 +88,11 @@ export function RangeNoteModal() {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-500">
-                  Range memo
+                  {rangeEditorNoteId ? "Edit range memo" : "Range memo"}
                 </p>
-                <h2 className="mt-1 font-serif text-xl">Add memo & timeline</h2>
+                <h2 className="mt-1 font-serif text-xl">
+                  {rangeEditorNoteId ? "Update memo & timeline" : "Add memo & timeline"}
+                </h2>
                 {startLabel ? (
                   <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                     {endLabel
@@ -134,6 +137,17 @@ export function RangeNoteModal() {
             </div>
 
             <div className="mt-4 flex justify-end gap-2 text-xs font-semibold">
+              {rangeEditorNoteId ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    deleteRangeNote(rangeEditorNoteId);
+                  }}
+                  className="mr-auto rounded-xl border border-rose-300/80 px-3 py-2 text-rose-600 hover:bg-rose-50 dark:border-rose-700/80 dark:text-rose-300 dark:hover:bg-rose-950/40"
+                >
+                  Delete memo
+                </button>
+              ) : null}
               <button
                 type="button"
                 onClick={handleClose}

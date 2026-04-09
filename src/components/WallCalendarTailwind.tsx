@@ -8,6 +8,8 @@ import { CalendarSidebar } from "./CalendarSidebar";
 import { DayDetailPanel } from "./DayDetailPanel";
 import { DayViewCard } from "./DayViewCard";
 import { RangeNoteModal } from "./RangeNoteModal";
+import { LeftSidebar } from "./LeftSidebar";
+import { CalendarModeToggleBar } from "./CalendarModeToggleBar";
 
 export function WallCalendarTailwind() {
   const {
@@ -94,112 +96,7 @@ export function WallCalendarTailwind() {
             : "border-slate-200/80 bg-white/95 text-slate-900",
         ].join(" ")}
       >
-        <aside
-          className={[
-            "hidden h-full w-56 flex-col justify-between border-r px-4 py-5 sm:flex",
-            isDark
-              ? "border-slate-800/80 bg-slate-950/95 text-slate-50"
-              : "border-slate-200/80 bg-slate-50/95 text-slate-900",
-          ].join(" ")}
-        >
-          <div className="space-y-6">
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-emerald-400 text-lg font-bold text-slate-950">
-                W
-              </div>
-              <div>
-                <p className="text-xs font-medium text-slate-400">Calendar</p>
-                <p className="text-sm font-semibold">Studio Board</p>
-              </div>
-            </div>
-
-            <nav className="space-y-1 text-sm">
-              <button
-                type="button"
-                className={[
-                  "flex w-full items-center justify-between rounded-xl px-3 py-2 font-semibold shadow-sm",
-                  isDark
-                    ? "bg-slate-900/80 text-slate-50 ring-1 ring-sky-500/40"
-                    : "bg-slate-100 text-slate-900 ring-1 ring-sky-500/30",
-                ].join(" ")}
-              >
-                <span>Calendar</span>
-                <span className="text-[11px] text-sky-400">Live</span>
-              </button>
-              <button
-                type="button"
-                className={[
-                  "flex w-full items-center justify-between rounded-xl px-3 py-2 font-medium",
-                  isDark
-                    ? "text-slate-400 hover:bg-slate-900/60 hover:text-slate-50"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-900",
-                ].join(" ")}
-              >
-                <span>Tasks</span>
-                <span
-                  className={[
-                    "text-[10px] rounded-full px-2 py-0.5",
-                    isDark ? "bg-slate-800 text-slate-400" : "bg-slate-200 text-slate-600",
-                  ].join(" ")}
-                >
-                  Soon
-                </span>
-              </button>
-              <button
-                type="button"
-                className={[
-                  "flex w-full items-center justify-between rounded-xl px-3 py-2 font-medium",
-                  isDark
-                    ? "text-slate-400 hover:bg-slate-900/60 hover:text-slate-50"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-900",
-                ].join(" ")}
-              >
-                <span>Analytics</span>
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              </button>
-              <button
-                type="button"
-                className={[
-                  "flex w-full items-center justify-between rounded-xl px-3 py-2 font-medium",
-                  isDark
-                    ? "text-slate-400 hover:bg-slate-900/60 hover:text-slate-50"
-                    : "text-slate-500 hover:bg-slate-100 hover:text-slate-900",
-                ].join(" ")}
-              >
-                <span>Settings</span>
-              </button>
-            </nav>
-          </div>
-
-          <div
-            className={[
-              "mt-6 rounded-2xl border p-3 text-xs",
-              isDark
-                ? "border-slate-800/90 bg-slate-900/80 text-slate-50"
-                : "border-slate-200/90 bg-white/90 text-slate-900",
-            ].join(" ")}
-          >
-            <p className="text-[11px] font-semibold text-slate-400">Today&apos;s focus</p>
-            <p className="mt-1 text-sm font-medium">Plan your month and key ranges.</p>
-            <div className="mt-3 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="h-7 w-7 rounded-full bg-gradient-to-br from-sky-500 to-emerald-400" />
-                <div>
-                  <p className="text-xs font-semibold">You</p>
-                  <p className="text-[10px] text-slate-400">Product designer</p>
-                </div>
-              </div>
-              <span
-                className={[
-                  "rounded-full px-2 py-1 text-[10px] font-semibold",
-                  isDark ? "bg-slate-800 text-emerald-300" : "bg-emerald-50 text-emerald-700",
-                ].join(" ")}
-              >
-                Online
-              </span>
-            </div>
-          </div>
-        </aside>
+        <LeftSidebar isDark={isDark} />
 
         <div
           className={[
@@ -216,87 +113,11 @@ export function WallCalendarTailwind() {
             ].join(" ")}
           >
             <CalendarHeader />
-            <div
-              className={[
-                "mt-3 flex flex-wrap items-center justify-between gap-2 text-xs",
-                isDark ? "text-slate-400" : "text-slate-500",
-              ].join(" ")}
-            >
-              <p
-                className={[
-                  "rounded-full px-3 py-1 font-medium",
-                  isDark ? "bg-slate-900/80 text-slate-100" : "bg-slate-100 text-slate-800",
-                ].join(" ")}
-              >
-                Today · {new Date().toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" })}
-              </p>
-              <div
-                className={[
-                  "flex items-center gap-1 rounded-full p-1",
-                  isDark ? "bg-slate-900/80" : "bg-slate-100",
-                ].join(" ")}
-              >
-                <button
-                  type="button"
-                  onClick={() => setViewMode("month")}
-                  className={[
-                    "rounded-full px-3 py-1 text-[11px] font-semibold shadow-sm",
-                    viewMode === "month"
-                      ? isDark
-                        ? "bg-slate-800 text-slate-50"
-                        : "bg-slate-900 text-slate-50"
-                      : isDark
-                        ? "text-slate-400 hover:bg-slate-800/80 hover:text-slate-50"
-                        : "text-slate-500 hover:bg-slate-200 hover:text-slate-900",
-                  ].join(" ")}
-                >
-                  Month
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewMode("week")}
-                  className={[
-                    "rounded-full px-3 py-1 text-[11px] font-medium",
-                    viewMode === "week"
-                      ? isDark
-                        ? "bg-slate-800 text-slate-50"
-                        : "bg-slate-900 text-slate-50"
-                      : isDark
-                        ? "text-slate-400 hover:bg-slate-800/80 hover:text-slate-50"
-                        : "text-slate-500 hover:bg-slate-200 hover:text-slate-900",
-                  ].join(" ")}
-                >
-                  Week
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setViewMode("day")}
-                  className={[
-                    "rounded-full px-3 py-1 text-[11px] font-medium",
-                    viewMode === "day"
-                      ? isDark
-                        ? "bg-slate-800 text-slate-50"
-                        : "bg-slate-900 text-slate-50"
-                      : isDark
-                        ? "text-slate-400 hover:bg-slate-800/80 hover:text-slate-50"
-                        : "text-slate-500 hover:bg-slate-200 hover:text-slate-900",
-                  ].join(" ")}
-                >
-                  Day
-                </button>
-                <button
-                  type="button"
-                  className={[
-                    "rounded-full px-3 py-1 text-[11px] font-medium",
-                    isDark
-                      ? "text-slate-400 hover:bg-slate-800/80 hover:text-slate-50"
-                      : "text-slate-500 hover:bg-slate-200 hover:text-slate-900",
-                  ].join(" ")}
-                >
-                  List
-                </button>
-              </div>
-            </div>
+            <CalendarModeToggleBar
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+              isDark={isDark}
+            />
           </div>
 
           <div className="flex-1 gap-4 px-4 pb-4 pt-3 md:px-6 md:pb-6 md:pt-4 xl:grid xl:grid-cols-[minmax(0,2fr)_minmax(0,0.9fr)]">
