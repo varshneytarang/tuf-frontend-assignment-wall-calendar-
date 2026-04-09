@@ -7,6 +7,7 @@ import { CalendarGrid } from "./CalendarGrid";
 import { CalendarSidebar } from "./CalendarSidebar";
 import { DayDetailPanel } from "./DayDetailPanel";
 import { DayViewCard } from "./DayViewCard";
+import { RangeNoteModal } from "./RangeNoteModal";
 
 export function WallCalendarTailwind() {
   const {
@@ -433,6 +434,7 @@ export function WallCalendarTailwind() {
           </div>
         </div>
       </motion.section>
+      <RangeNoteModal />
     </div>
   );
 }

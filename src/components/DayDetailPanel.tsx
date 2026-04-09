@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useCalendar } from "../context/CalendarContext";
 import { Mood } from "../types/calendar";
 import { formatDay, fromIso, tagColorClasses } from "../utils/calendar";
@@ -30,6 +31,7 @@ export function DayDetailPanel() {
   const canCreateReminder = Boolean(
     selectedDayIso && selectedHour !== null && reminderText.trim().length > 0,
   );
+  const [timeDialogOpen, setTimeDialogOpen] = useState(false);
 
   return (
     <div
@@ -42,20 +44,20 @@ export function DayDetailPanel() {
     >
       <div className="mb-3 flex items-center justify-between gap-2">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Day timeline</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
+            Day timeline
+          </p>
           {selectedDayIso ? (
-            <p className="text-sm font-semibold">
-              {formatDay(fromIso(selectedDayIso))}
-            </p>
+            <p className="text-sm font-semibold">{formatDay(fromIso(selectedDayIso))}</p>
           ) : (
-            <p className="text-sm font-semibold text-slate-500">Select a day in the grid</p>
+            <p className="text-[11px] text-slate-500">Select a day in the grid</p>
           )}
         </div>
         <button
           type="button"
           onClick={() => setSelectedDayIso(null)}
           className={[
-            "rounded-full border px-2 py-1 text-[11px] font-semibold",
+            "rounded-full border px-2 py-1 text-[10px] font-semibold",
             isDark
               ? "border-slate-700 text-slate-200 hover:bg-slate-800"
               : "border-slate-300 text-slate-700 hover:bg-slate-100",
@@ -74,8 +76,8 @@ export function DayDetailPanel() {
             selectedDayIso && dayMoods[selectedDayIso] === "low"
               ? "bg-rose-500 text-white"
               : isDark
-                ? "bg-rose-500/15 text-rose-300"
-                : "bg-rose-50 text-rose-700"
+                  ? "bg-rose-500/15 text-rose-300"
+                  : "bg-rose-50 text-rose-700"
           } ${selectedDayIso ? "" : "opacity-60 cursor-not-allowed"}`}
           onClick={() => setMoodForSelectedDay("low")}
         >
@@ -88,8 +90,8 @@ export function DayDetailPanel() {
             selectedDayIso && dayMoods[selectedDayIso] === "ok"
               ? "bg-amber-500 text-white"
               : isDark
-                ? "bg-amber-400/15 text-amber-200"
-                : "bg-amber-50 text-amber-800"
+                  ? "bg-amber-400/15 text-amber-200"
+                  : "bg-amber-50 text-amber-800"
           } ${selectedDayIso ? "" : "opacity-60 cursor-not-allowed"}`}
           onClick={() => setMoodForSelectedDay("ok")}
         >
@@ -102,8 +104,8 @@ export function DayDetailPanel() {
             selectedDayIso && dayMoods[selectedDayIso] === "high"
               ? "bg-emerald-500 text-white"
               : isDark
-                ? "bg-emerald-400/15 text-emerald-200"
-                : "bg-emerald-50 text-emerald-800"
+                  ? "bg-emerald-400/15 text-emerald-200"
+                  : "bg-emerald-50 text-emerald-800"
           } ${selectedDayIso ? "" : "opacity-60 cursor-not-allowed"}`}
           onClick={() => setMoodForSelectedDay("high")}
         >
@@ -125,22 +127,45 @@ export function DayDetailPanel() {
             {!selectedDayIso
               ? "Pick a day to schedule"
               : selectedDayNotes.length
-                ? selectedHour !== null
-                  ? `1 event at ${selectedHour.toString().padStart(2, "0")}:00`
-                  : `${selectedDayNotes.length} note${selectedDayNotes.length > 1 ? "s" : ""}`
-                : "No notes for this day"}
+                  ? selectedHour !== null
+                      ? `1 event at ${selectedHour.toString().padStart(2, "0")}:00`
+                      : `${selectedDayNotes.length} note${
+                          selectedDayNotes.length > 1 ? "s" : ""
+                        }`
+                  : "No notes for this day"}
           </span>
         </div>
 
         <div className="mb-3 flex flex-col gap-2 text-[11px]">
-          <div className="flex items-center justify-between">
-            <span className="text-slate-400">Reminder</span>
-            <span className="text-slate-500">
-              {selectedDayIso && selectedHour !== null
-                ? `${selectedHour.toString().padStart(2, "0")}:00`
-                : "Pick a day and hour"}
-            </span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-col">
+              <span className="text-slate-400">Reminder</span>
+              <span className="text-slate-500">
+                {selectedDayIso && selectedHour !== null
+                  ? `${selectedHour.toString().padStart(2, "0")}:00`
+                  : "Pick a day and time"}
+              </span>
+            </div>
+            <button
+              type="button"
+              disabled={!selectedDayIso || selectedDayNotes.length === 0}
+              onClick={() => {
+                if (!selectedDayIso || selectedDayNotes.length === 0) return;
+                setTimeDialogOpen(true);
+              }}
+              className={[
+                "rounded-full border px-3 py-1 text-[10px] font-semibold",
+                !selectedDayIso || selectedDayNotes.length === 0
+                  ? "cursor-not-allowed border-slate-300/70 text-slate-400"
+                  : isDark
+                      ? "border-slate-700 text-slate-100 hover:bg-slate-800"
+                      : "border-slate-300 text-slate-700 hover:bg-slate-100",
+              ].join(" ")}
+            >
+              Choose time
+            </button>
           </div>
+
           <div className="flex gap-2">
             <input
               type="text"
@@ -194,16 +219,18 @@ export function DayDetailPanel() {
                       "h-8 rounded-lg border border-dashed transition-colors",
                       isActiveSlot
                         ? isDark
-                          ? "border-sky-400/70 bg-slate-900/80"
-                          : "border-sky-400/70 bg-sky-50"
+                            ? "border-sky-400/70 bg-slate-900/80"
+                            : "border-sky-400/70 bg-sky-50"
                         : isDark
-                        ? "border-slate-800/80 bg-slate-950/60"
-                        : "border-slate-200/80 bg-white/80",
+                            ? "border-slate-800/80 bg-slate-950/60"
+                            : "border-slate-200/80 bg-white/80",
                     ].join(" ")}
                   />
                   {note ? (
                     <div
-                      className={`absolute inset-y-[2px] left-[2px] right-[2px] flex items-center gap-2 rounded-md px-2 text-[11px] shadow-sm ${tagColorClasses(note.color)}`}
+                      className={`absolute inset-y-[2px] left-[2px] right-[2px] flex items-center gap-2 rounded-md px-2 text-[11px] shadow-sm ${tagColorClasses(
+                        note.color,
+                      )}`}
                     >
                       <div
                         className={[
@@ -225,6 +252,88 @@ export function DayDetailPanel() {
           })}
         </div>
       </div>
+
+      <AnimatePresence>
+        {timeDialogOpen ? (
+          <motion.div
+            className="fixed inset-0 z-40 flex items-end justify-center bg-slate-950/60 px-3 pb-5 sm:items-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 24, scale: 0.97 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className={[
+                "w-full max-w-sm rounded-2xl border p-3 text-xs shadow-2xl max-h-[70vh] overflow-y-auto",
+                isDark
+                  ? "border-slate-800/80 bg-slate-950/95 text-slate-50"
+                  : "border-slate-200/90 bg-white/95 text-slate-900",
+              ].join(" ")}
+            >
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-sky-500">
+                    Pick time
+                  </p>
+                  {selectedDayIso ? (
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                      {formatDay(fromIso(selectedDayIso))}
+                    </p>
+                  ) : null}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setTimeDialogOpen(false)}
+                  className="rounded-full border border-slate-300/70 px-2 py-1 text-[11px] font-semibold text-slate-500 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <p className="mb-2 text-[11px] text-slate-500 dark:text-slate-400">
+                Choose a time slot for today&apos;s main note.
+              </p>
+
+              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                {hours.map((hour) => {
+                  const label = `${hour.toString().padStart(2, "0")}:00`;
+                  const isActive = selectedHour === hour;
+                  const disabled = !selectedDayIso || selectedDayNotes.length === 0;
+                  return (
+                    <button
+                      key={hour}
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => {
+                        if (!selectedDayIso || selectedDayNotes.length === 0) return;
+                        setDayEventHours((current) => ({ ...current, [selectedDayIso]: hour }));
+                        setTimeDialogOpen(false);
+                      }}
+                      className={[
+                        "rounded-xl border px-2 py-1 text-[11px] font-semibold",
+                        disabled
+                          ? "cursor-not-allowed border-slate-300/60 text-slate-400"
+                          : isActive
+                              ? isDark
+                                  ? "border-sky-400 bg-sky-500/20 text-sky-100"
+                                  : "border-sky-500 bg-sky-50 text-sky-700"
+                              : isDark
+                                  ? "border-slate-700 bg-slate-900 text-slate-100 hover:bg-slate-800"
+                                  : "border-slate-300 bg-white text-slate-800 hover:bg-slate-100",
+                      ].join(" ")}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
     </div>
   );
 }

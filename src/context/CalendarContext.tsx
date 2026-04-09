@@ -87,7 +87,7 @@ export interface CalendarContextValue {
   todayIso: string;
   updateRangeForDayClick: (iso: string) => void;
   notesForDay: (iso: string) => NoteItem[];
-  attachDraftToRange: (onInvalid?: () => void) => void;
+  attachDraftToRange: (text: string, onInvalid?: () => void) => void;
   downloadIcs: () => void;
   createReminder: (dayIso: string, hour: number, message: string) => void;
   beginInlineEdit: (note: NoteItem) => void;
@@ -97,6 +97,10 @@ export interface CalendarContextValue {
   setEditingText: React.Dispatch<React.SetStateAction<string>>;
   isInRange: (iso: string) => boolean;
   getRangeLabel: () => string;
+  rangeNoteEditorOpen: boolean;
+  setRangeNoteEditorOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  rangeEditorNoteId: string | null;
+  setRangeEditorNoteId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const CalendarContext = createContext<CalendarContextValue | undefined>(undefined);
@@ -120,6 +124,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [dayMoods, setDayMoods] = useState<Record<string, Mood>>({});
   const [dayEventHours, setDayEventHours] = useState<Record<string, number>>({});
   const [reminders, setReminders] = useState<ReminderItem[]>([]);
+  const [rangeNoteEditorOpen, setRangeNoteEditorOpen] = useState(false);
+  const [rangeEditorNoteId, setRangeEditorNoteId] = useState<string | null>(null);
 
   useEffect(() => {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -283,19 +289,22 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (!range.start || (range.start && range.end)) {
       setRange({ start: iso, end: null });
       setSelectedDayIso(iso);
+      setRangeEditorNoteId(null);
       return;
     }
     if (iso < range.start) {
       setRange({ start: iso, end: null });
       setSelectedDayIso(iso);
+      setRangeEditorNoteId(null);
       return;
     }
     setRange({ start: range.start, end: iso });
+    setRangeNoteEditorOpen(true);
     setSelectedDayIso(iso);
   }
 
-  function attachDraftToRange(onInvalid?: () => void) {
-    const trimmed = noteDraft.trim();
+  function attachDraftToRange(text: string, onInvalid?: () => void) {
+    const trimmed = text.trim();
     if (!trimmed || !range.start) {
       if (onInvalid) onInvalid();
       return;
@@ -308,15 +317,23 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (onInvalid) onInvalid();
       return;
     }
-    const note: NoteItem = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      text: trimmed,
-      color: noteColor,
-      start: range.start,
-      end,
-    };
-    setNotes((current) => [note, ...current]);
-    setNoteDraft("");
+    setNotes((current) => {
+      if (rangeEditorNoteId) {
+        return current.map((note) =>
+          note.id === rangeEditorNoteId ? { ...note, text: trimmed, start: range.start!, end } : note,
+        );
+      }
+
+      const note: NoteItem = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        text: trimmed,
+        color: noteColor,
+        start: range.start!,
+        end,
+      };
+      return [note, ...current];
+    });
+    setRangeEditorNoteId(null);
   }
 
   function downloadIcs() {
@@ -507,6 +524,10 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setEditingText,
     isInRange: isInRangeHelper,
     getRangeLabel: getRangeLabelHelper,
+    rangeNoteEditorOpen,
+    setRangeNoteEditorOpen,
+    rangeEditorNoteId,
+    setRangeEditorNoteId,
     createReminder,
   };
 
